@@ -1,4 +1,4 @@
-module github.com/devfullcycle/20-CleanArch
+module github.com/hugodnpm/goexpert-desafio-clean-architecture
 
 go 1.19
 

@@ -1,7 +1,7 @@
 package usecase
 
 import (
-	"github.com/devfullcycle/20-CleanArch/internal/entity"
+	"github.com/hugodnpm/goexpert-desafio-clean-architecture/internal/entity"
 )
 
 type ListOrdersUseCase struct {

@@ -8,14 +8,13 @@ import (
 
 	graphql_handler "github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
-	"github.com/devfullcycle/20-CleanArch/configs"
-	"github.com/devfullcycle/20-CleanArch/internal/event/handler"
-	"github.com/devfullcycle/20-CleanArch/internal/infra/graph"
-
-	"github.com/devfullcycle/20-CleanArch/internal/infra/grpc/pb"
-	"github.com/devfullcycle/20-CleanArch/internal/infra/grpc/service"
-	"github.com/devfullcycle/20-CleanArch/internal/infra/web/webserver"
-	"github.com/devfullcycle/20-CleanArch/pkg/events"
+	"github.com/hugodnpm/goexpert-desafio-clean-architecture/configs"
+	"github.com/hugodnpm/goexpert-desafio-clean-architecture/internal/event/handler"
+	"github.com/hugodnpm/goexpert-desafio-clean-architecture/internal/infra/graph"
+	"github.com/hugodnpm/goexpert-desafio-clean-architecture/internal/infra/grpc/pb"
+	"github.com/hugodnpm/goexpert-desafio-clean-architecture/internal/infra/grpc/service"
+	"github.com/hugodnpm/goexpert-desafio-clean-architecture/internal/infra/web/webserver"
+	"github.com/hugodnpm/goexpert-desafio-clean-architecture/pkg/events"
 	"github.com/streadway/amqp"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -43,8 +42,8 @@ func main() {
 		RabbitMQChannel: rabbitMQChannel,
 	})
 
-	createOrderUseCase := NewCreateOrderUseCase(db, eventDispatcher)
-	//ListOrdersUseCase := NewListOrderUseCase(db)
+	CreateOrderUseCase := NewCreateOrderUseCase(db, eventDispatcher)
+	ListOrdersUseCase := NewListOrderUseCase(db)
 
 	webserver := webserver.NewWebServer(configs.WebServerPort)
 	webOrderHandler := NewWebOrderHandler(db, eventDispatcher)
@@ -55,7 +54,7 @@ func main() {
 	go webserver.Start()
 
 	grpcServer := grpc.NewServer()
-	createOrderService := service.NewOrderService(*createOrderUseCase)
+	createOrderService := service.NewOrderService(*CreateOrderUseCase, *ListOrdersUseCase)
 	pb.RegisterOrderServiceServer(grpcServer, createOrderService)
 	reflection.Register(grpcServer)
 
@@ -66,9 +65,11 @@ func main() {
 	}
 	go grpcServer.Serve(lis)
 
-	srv := graphql_handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{
-		CreateOrderUseCase: *createOrderUseCase,
-	}}))
+	srv := graphql_handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{CreateOrderUseCase: *CreateOrderUseCase, ListOrdersUseCase: *ListOrdersUseCase}}))
+
+	/*srv := graphql_handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graphql_handler.Resolver{
+		CreateOrderUseCase: *CreateOrderUseCase,
+	}}))*/
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	http.Handle("/query", srv)
 

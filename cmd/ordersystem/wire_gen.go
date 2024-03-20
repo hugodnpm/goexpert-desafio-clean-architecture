@@ -8,12 +8,12 @@ package main
 
 import (
 	"database/sql"
-	"github.com/devfullcycle/20-CleanArch/internal/entity"
-	"github.com/devfullcycle/20-CleanArch/internal/event"
-	"github.com/devfullcycle/20-CleanArch/internal/infra/database"
-	"github.com/devfullcycle/20-CleanArch/internal/infra/web"
-	"github.com/devfullcycle/20-CleanArch/internal/usecase"
-	"github.com/devfullcycle/20-CleanArch/pkg/events"
+	"github.com/hugodnpm/goexpert-desafio-clean-architecture/internal/entity"
+	"github.com/hugodnpm/goexpert-desafio-clean-architecture/internal/event"
+	"github.com/hugodnpm/goexpert-desafio-clean-architecture/internal/infra/database"
+	"github.com/hugodnpm/goexpert-desafio-clean-architecture/internal/infra/web"
+	"github.com/hugodnpm/goexpert-desafio-clean-architecture/internal/usecase"
+	"github.com/hugodnpm/goexpert-desafio-clean-architecture/pkg/events"
 	"github.com/google/wire"
 )
 
