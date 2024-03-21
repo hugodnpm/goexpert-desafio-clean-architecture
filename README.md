@@ -27,14 +27,10 @@ docker compose up -d
 
 ```
 
-2. Entrar no container e executar esses 3 comando para criar a tabela Order:
+2. Realizar a Migrations:
 
-```bash
-docker-compose exec mysql bash
-
-mysql -uroot -p orders
-
-CREATE TABLE orders (id varchar(255) NOT NULL, price float NOT NULL, tax float NOT NULL, final_price float NOT NULL, PRIMARY KEY (id));
+```
+make migrate
 ```
 
 ## Portas Disponíveis para cada Sistema:
